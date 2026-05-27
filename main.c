@@ -1,58 +1,53 @@
+// we will be making a web server from scratch in this
+#include <fcntl.h>
 #include <stdio.h>
-#include <string.h>
-#include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
+#include <string.h>
+#include <sys/sendfile.h>
+#include <unistd.h>
+
+
+
 int main() {
 
-    char* ip = "142.250.72.14"; // the ip address 
-    char* googleip = "142.250.72.14"; // ip add of google and port is 443 
+    // A server describes a role, purpose or behaviour || CENTER OF INFORMATION
+    // A server is nothing but a programme running on remote which supplies information on demand to the client
+    // A client is a programme which asks for the information from the server using networking protocols
+    // Even when runnning of the same machines the server and the client would communicate using the networking protocols only
 
-    int socketFD = socket(AF_INET,SOCK_STREAM,0); // socket file descriptor 
-    
-    struct sockaddr_in address;
-    memset(&address, 0, sizeof(address)); 
-    address.sin_port = htons(80); // to convert port from int to unsigned short integer 
+    int socketSD;
+    socketSD = socket(AF_INET,SOCK_STREAM,0); // AF_INET is used for IPv4 Internet protocols
+    // this function will return a file descriptor of a socket
+
+    // We will create a socket address
+    // in port we need to pass in the hex function for the port number using python to find out to the hex of the port
+    // hex(8080) = 0x1f90
+
+       struct sockaddr_in *socketADDR;
+       socketADDR->sin_family = AF_INET6;
+       socketADDR->sin_addr.s_addr = 0;
+       socketADDR->sin_port = 0x1f90;
+
+    // now we are going to bind the socket
+    int b = bind(socketSD,(struct sockaddr*)socketADDR,sizeof(socketADDR));
+    int l = listen(socketSD,10);
+    int clientFD = accept(socketSD,0,0);// this is going to return the client fd
+    char buffer[256] = {0};
+    recv(clientFD,buffer,256,0);
+
+    //GET /file.html ..............
+
+    char* file = buffer+5;
+    *strchr(file,' ') = 0;
+    int openedFD = open(file,O_RDONLY);
+
+    sendfile(clientFD,openedFD,0,256);
 
 
-    /*In Named Data Networking (NDN), the standard representation for multi-byte integers (such as Type and Length fields in TLV packets) uses network byte order, which is big-endian.  This means the most significant byte is stored at the lowest memory address, ensuring consistency across different hardware architectures. 
-
-    For variable-length integers in NDN TLV encoding:
-
-    If the value is $\le 252$ ($0xFC$), it is encoded in a single byte. 
-    If the value is $> 252$ and $\le 65535$ ($0xFFFF$), the first byte is $253$ ($0xFD$), followed by the 2-byte big-endian representation of the number. 
-    If the value is $> 65535$ and $\le 4294967295$ ($0xFFFFFFFF$), the first byte is $254$ ($0xFE$), followed by the 4-byte big-endian representation. 
-    If the value is $> 4294967295$, the first byte is $255$ ($0xFF$), followed by the 8-byte big-endian representation. 
-    This big-endian convention aligns with standard network protocols, facilitating interoperability between systems that may internally use little-endian storage (like most x86 processors). 
-
-    */
-
-
-    address.sin_family = AF_INET;
-    // address.sin_addr.s_addr ; this reffers to the converted ip address variable that we need to put the ip address into after converting the ip address into a integer from a character 
-    inet_pton(AF_INET,ip,&address.sin_addr.s_addr);
-
-
-    //while looking at ip addresses we see that the port for http is 80 and the port for https is 443 in most of the sites 
-
-
-    int result = connect(socketFD, (struct sockaddr*)&address, sizeof(address));
-
-    if (result == 0 )
-    {
-        printf("The connection was successful\n");
-    }
-
-    char* message;
-    message = "GET \\ HTTP/1.1\r\nHost:google.com\r\n\r\n";
-    send(socketFD,message,strlen(message),0);
-
-    char buffer[1024];
-    recv(socketFD,buffer,1024,0);
-
-    printf("Response :: ");
-    printf("%s",buffer);
+    close(clientFD);
+    close(socketSD);
+    close(openedFD);
 
 
 

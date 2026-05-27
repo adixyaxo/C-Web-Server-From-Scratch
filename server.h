@@ -20,12 +20,12 @@ typedef struct
 
 } Server;
 
-struct Server constructor(int domain,
+Server constructor(int domain,
                           int service,
                           int protocol,
                           long interface,
                           int port,
                           int backlog,
-                          void (*launch)(void));
+                          void (*launch)(Server *server));
 
 #endif

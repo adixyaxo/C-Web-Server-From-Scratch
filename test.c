@@ -1,15 +1,22 @@
 #include <stdio.h>
+#include "server.h"
 
-int main() {
+void launch(Server *server){
 
+}
 
-    
-    int p = 7;
-    int *pt = p;
-    int* ptt = pt;
-    
-    
-    printf(pt,p,ptt,*pt,*ptt,&pt,&p,&ptt);
+int main()
+{
 
-    return 0;
+  Server server;
+  server = constructor(AF_INET,SOCK_STREAM,0,INADDR_ANY,80,10,launch);
+
+  int clientFD = accept(server.socket_fd, 0, 0); // this is going to return the client fd
+  char buffer[256] = {0};
+
+  recv(clientFD, buffer, 256, 0);
+
+  // GET /file.html ..............
+
+  return 0;
 }

@@ -19,13 +19,13 @@ Server constructor(int domain,
   server.interface = interface;
   server.port = port;
   server.backlog = backlog;
-  server.socket_fd = socket(domain, AF_INET, protocol);
+  server.socket_fd = socket(domain, interface, protocol);
 
   server.address.sin_addr.s_addr = protocol;
   server.address.sin_port = htons(port);
-  server.address.sin_family = AF_INET;
+  server.address.sin_family = interface;
 
-  server.socket_fd = socket(domain, AF_INET, protocol);
+  server.socket_fd = socket(domain, interface, protocol);
 
   if (server.socket_fd == 0)
   {

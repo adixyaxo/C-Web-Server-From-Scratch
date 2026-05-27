@@ -1,6 +1,6 @@
 #ifndef SERVER_H
 #define SERVER_H
-# include <sys/socket.h>
+#include <sys/socket.h>
 #include <netinet/in.h>
 
 typedef struct
@@ -12,16 +12,20 @@ typedef struct
   int port;
   int backlog;
   int socket_fd;
+  int bind_int;
+  int listen_int;
   struct sockaddr_in address;
 
-}Server;
+  void (*launch)(void);
+
+} Server;
 
 struct Server constructor(int domain,
-  int service,
-  int protocol,
-  long interface,
-  int port,
-  int backlog);
-
+                          int service,
+                          int protocol,
+                          long interface,
+                          int port,
+                          int backlog,
+                          void (*launch)(void));
 
 #endif

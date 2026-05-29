@@ -4,6 +4,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+char* html_return(char* filename);
+
 typedef struct Server
 {
     int domain;

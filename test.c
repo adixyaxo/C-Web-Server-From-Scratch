@@ -27,12 +27,7 @@ char* html_return(char* filename)
   html[0] = '\0';
   char *request = "HTTP/1.1 200 OK\r\n"
                   "Content-Type: text/html\r\n"
-                  "\r\n"
-                  "<html>"
-                  "<body>"
-                  "<h1>FINALLY BUILT AN HTTP SERVER FROM SCRATCH IN C</h1>"
-                  "</body>"
-                  "</html>";
+                  "\r\n";
   strcat(html,request);
   char buffer[256];
   while (fgets(buffer, sizeof(buffer), fp) != NULL)

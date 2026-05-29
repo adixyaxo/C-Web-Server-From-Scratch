@@ -9,8 +9,7 @@ Server constructor(int domain,
                    int protocol,
                    long interface,
                    int port,
-                   int backlog,
-                  void(*launch)(void))
+                   int backlog)
 {
   Server server;
   server.domain = domain;
@@ -21,11 +20,11 @@ Server constructor(int domain,
   server.backlog = backlog;
   server.socket_fd = socket(domain, interface, protocol);
 
-  server.address.sin_addr.s_addr = protocol;
+  server.address.sin_addr.s_addr = interface;
   server.address.sin_port = htons(port);
-  server.address.sin_family = interface;
+  server.address.sin_family = domain;
 
-  server.socket_fd = socket(domain, interface, protocol);
+  server.socket_fd = socket(domain, service, protocol);
 
   if (server.socket_fd == 0)
   {
@@ -48,6 +47,5 @@ Server constructor(int domain,
     exit(EXIT_FAILURE);
   }
 
-  server.launch = launch;
   return server;
 };

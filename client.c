@@ -18,7 +18,11 @@ void getdata(int domain, int type, int protocol, char *ip_addr,int port)
   if (connect(SocketFD, (struct sockaddr *)(&addr), sizeof(addr)) != 0)
   {
     printf("Connection was not Successful\n");
-  };
+  }
+  else
+  {
+    printf("Socket created\n");
+  }
 
   char *msg;
   msg = "GET / HTTP/1.1\r\nHost:google.com\r\n\r\n";
@@ -26,13 +30,21 @@ void getdata(int domain, int type, int protocol, char *ip_addr,int port)
   {
     printf("Sending failed\n");
   }
+  else
+  {
+    printf("Sending Request Successful\n");
+  }
 
   char buffer[1024];
   if (recv(SocketFD, buffer, sizeof(buffer), 0) == -1)
   {
-    printf("Error in sending\n");
+    printf("Error in reciving\n");
   }
-  printf("Response was :: \n%s", buffer);
+  else
+  {
+    printf("Reciving Response Successful");
+  }
+  printf("=>HTML response recived is :: \n%s", buffer);
 }
 
 int main()

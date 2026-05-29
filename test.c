@@ -3,7 +3,7 @@
 #include "server.h"
 #include <string.h>
 #include <stdlib.h>
-void launch(Server *server)
+void launch(Server *server,char* filename)
 {
   char buffer[30000];
   while (1)
@@ -13,7 +13,7 @@ void launch(Server *server)
     int new_socket = accept(server->socket_fd, (struct sockaddr *)&(server->address), (socklen_t *)&addlen);
     read(new_socket, buffer, 30000);
     printf("\n%s\n", buffer);
-    char* hello = html_return("basic.html");
+    char* hello = html_return(filename);
     write(new_socket, hello, strlen(hello));
     close(new_socket);
     free(hello);
@@ -46,10 +46,14 @@ char* html_return(char* filename)
 int main()
 {
 
-  printf("%s\n",html_return("basic.html"));
+  char* filename = malloc(256);
+  filename = "basic.html";
+  char* raw = malloc(10000);
+  raw = html_return("basic.html");
+  printf("%s\n",raw);
   Server server;
   server = constructor(AF_INET, SOCK_STREAM, 0, INADDR_ANY, 3000, 10);
-  launch(&server);
+  launch(&server,filename);
 
   return 0;
 }

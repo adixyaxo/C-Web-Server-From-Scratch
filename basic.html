@@ -1,10 +1,130 @@
-HTTP/1.1 200 OK
-Content-Type: text/html<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>Basic HTML response</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>C HTTP Server</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-family: Inter, Arial, sans-serif;
+
+            background:
+                radial-gradient(circle at top left, #1e293b, #0f172a 60%);
+
+            color: white;
+            overflow: hidden;
+        }
+
+        .card {
+            width: 90%;
+            max-width: 700px;
+
+            padding: 60px 40px;
+
+            text-align: center;
+
+            background: rgba(255, 255, 255, 0.06);
+
+            border: 1px solid rgba(255, 255, 255, 0.12);
+
+            border-radius: 24px;
+
+            backdrop-filter: blur(18px);
+
+            box-shadow:
+                0 10px 40px rgba(0, 0, 0, 0.4),
+                inset 0 1px 1px rgba(255, 255, 255, 0.08);
+        }
+
+        .badge {
+            display: inline-block;
+
+            margin-bottom: 24px;
+            padding: 8px 18px;
+
+            border-radius: 999px;
+
+            background: rgba(255, 255, 255, 0.08);
+
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+
+            color: #cbd5e1;
+        }
+
+        h1 {
+            font-size: 3rem;
+            line-height: 1.1;
+
+            margin-bottom: 20px;
+
+            font-weight: 700;
+        }
+
+        .highlight {
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            color: #cbd5e1;
+
+            font-size: 1.05rem;
+
+            line-height: 1.8;
+        }
+
+        .footer {
+            margin-top: 30px;
+
+            font-size: 0.9rem;
+
+            color: #64748b;
+        }
+    </style>
 </head>
+
 <body>
-  <h1>This is a very basic html page response send</h1>
+
+    <div class="card">
+
+        <div class="badge">
+            C • HTTP • From Scratch
+        </div>
+        <br>
+
+        <h1>
+            Finally Built an
+            <span class="highlight">HTTP Server</span>
+            From Scratch in C
+        </h1>
+
+
+        <p>
+            Raw sockets. Manual headers. Zero frameworks.
+            Just bytes flying through the void and somehow becoming a website.
+        </p>
+
+        <div class="footer">
+            localhost:3000
+        </div>
+
+    </div>
+
 </body>
 </html>

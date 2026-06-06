@@ -3,49 +3,58 @@
 #include "server.h"
 #include <string.h>
 #include <stdlib.h>
+char *request;
 
-char* return_json(){
-  char* request = malloc(10000);
+char *return_json()
+{
+  request = malloc(10000);
   request = "HTTP/1.1 200 OK\r\n"
-                  "Content-Type: text/json\r\n"
-                  "\r\n"
-                  "{\"name\":\"Aditya\",\"age\":18}";
+            "Content-Type: text/json\r\n"
+            "\r\n"
+            "{\"name\":\"Aditya\",\"age\":18}";
   return request;
 }
 
-
-void launch(Server *server,char* filename)
+void launch(Server *server, char *filename)
 {
   char buffer[30000];
+
   while (1)
   {
+    // if (request[0] == 'G')
+    // {
+    //   getdata(AF_INET, SOCK_STREAM, 0, "127.0.0.1", 3000);
+    // }
+
     printf("===== WAITING FOR CONNECTION =====");
     socklen_t addlen = sizeof(server->address);
     int new_socket = accept(server->socket_fd, (struct sockaddr *)&(server->address), (socklen_t *)&addlen);
     read(new_socket, buffer, 30000);
     printf("\n%s\n", buffer);
     // char* hello = html_return(filename);
-    char* hello = return_json();
+    char *hello = malloc(10000);
+    hello = return_json();
     write(new_socket, hello, strlen(hello));
     close(new_socket);
-    free(hello);
+    // free(hello);
+    // free(request);
   }
+
 }
 
-
-char* html_return(char* filename)
+char *html_return(char *filename)
 {
   FILE *fp = fopen(filename, "r");
-  char* html = malloc(10000);
+  char *html = malloc(10000);
   html[0] = '\0';
   char *request = "HTTP/1.1 200 OK\r\n"
                   "Content-Type: text/html\r\n"
                   "\r\n";
-  strcat(html,request);
+  strcat(html, request);
   char buffer[256];
   while (fgets(buffer, sizeof(buffer), fp) != NULL)
   {
-    strcat(html,buffer);
+    strcat(html, buffer);
   }
   fclose(fp);
   return html;
@@ -53,15 +62,10 @@ char* html_return(char* filename)
 
 int main()
 {
-
-  char* filename = malloc(256);
-  filename = "basic.html";
-  char* raw = malloc(10000);
-  raw = html_return("basic.html");
-  printf("%s\n",raw);
+  char *filename = malloc(256);
   Server server;
-  server = constructor(AF_INET, SOCK_STREAM, 0, INADDR_ANY, 3000, 10);
-  launch(&server,filename);
+  server = constructor(AF_INET, SOCK_STREAM, 0, INADDR_ANY, 8000, 10);
+  launch(&server, filename);
 
   return 0;
 }

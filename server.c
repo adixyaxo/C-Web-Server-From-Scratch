@@ -3,6 +3,51 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <stdlib.h>
+#include <string.h>
+       #include <arpa/inet.h>
+
+
+
+void getdata(Server *server,char* ip_addr)
+{
+  int SocketFD = socket(server->domain,server->interface,server->protocol);
+
+  char *ip = ip_addr;
+  server->address.sin_port = htons(server->port);
+  inet_pton(server->domain, ip, (struct sockaddr *)(&server->address.sin_addr));
+  server->address.sin_family = server->domain;
+
+  if (connect(SocketFD, (struct sockaddr *)(&server->address), sizeof(server->address)) != 0)
+  {
+    printf("Connection was not Successful\n");
+  }
+  else
+  {
+    printf("Socket created\n");
+  }
+
+  char *msg;
+  msg = "GET / HTTP/1.1\r\nHost:google.com\r\n\r\n";
+  if (send(SocketFD, msg, strlen(msg), 0) == -1)
+  {
+    printf("Sending failed\n");
+  }
+  else
+  {
+    printf("Sending Request Successful\n");
+  }
+
+  char buffer[1024];
+  if (recv(SocketFD, buffer, sizeof(buffer), 0) == -1)
+  {
+    printf("Error in reciving\n");
+  }
+  else
+  {
+    printf("Reciving Response Successful");
+  }
+  printf("=>HTML response recived is :: \n%s", buffer);
+}
 
 Server constructor(int domain,
                    int service,

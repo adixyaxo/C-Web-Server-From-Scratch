@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 
 char* html_return(char* filename);
+char* return_json();
 
 typedef struct Server
 {

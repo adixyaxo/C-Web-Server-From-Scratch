@@ -3,6 +3,17 @@
 #include "server.h"
 #include <string.h>
 #include <stdlib.h>
+
+char* return_json(){
+  char* request = malloc(10000);
+  request = "HTTP/1.1 200 OK\r\n"
+                  "Content-Type: text/json\r\n"
+                  "\r\n"
+                  "{\"name\":\"Aditya\",\"age\":18}";
+  return request;
+}
+
+
 void launch(Server *server,char* filename)
 {
   char buffer[30000];
@@ -13,12 +24,14 @@ void launch(Server *server,char* filename)
     int new_socket = accept(server->socket_fd, (struct sockaddr *)&(server->address), (socklen_t *)&addlen);
     read(new_socket, buffer, 30000);
     printf("\n%s\n", buffer);
-    char* hello = html_return(filename);
+    // char* hello = html_return(filename);
+    char* hello = return_json();
     write(new_socket, hello, strlen(hello));
     close(new_socket);
     free(hello);
   }
 }
+
 
 char* html_return(char* filename)
 {

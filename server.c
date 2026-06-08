@@ -4,20 +4,53 @@
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <string.h>
-       #include <arpa/inet.h>
+#include <arpa/inet.h>
 
-
-
-void getdata(Server *server,char* ip_addr)
+char *html_return(char *filename)
 {
-  int SocketFD = socket(server->domain,server->interface,server->protocol);
+  FILE *fp = fopen(filename, "r");
+  char *html = malloc(10000);
+  html[0] = '\0';
+  char *request = "HTTP/1.1 200 OK\r\n"
+                  "Content-Type: text/html\r\n"
+                  "\r\n";
+  strcat(html, request);
+  char buffer[256];
+  while (fgets(buffer, sizeof(buffer), fp) != NULL)
+  {
+    strcat(html, buffer);
+  }
+  fclose(fp);
+  return html;
+}
+
+char *json_return(char *filename)
+{
+  FILE *fp = fopen(filename, "r");
+  char *json = malloc(10000);
+  json[0] = '\0';
+  char *request = "HTTP/1.1 200 OK\r\n"
+                  "Content-Type: text/json\r\n"
+                  "\r\n";
+  strcat(json, request);
+  char buffer[256];
+  while (fgets(buffer, sizeof(buffer), fp) != NULL)
+  {
+    strcat(json, buffer);
+  }
+  fclose(fp);
+  return json;
+}
+
+void getdata(Server *server, char *ip_addr)
+{
+
 
   char *ip = ip_addr;
   server->address.sin_port = htons(server->port);
-  inet_pton(server->domain, ip, (struct sockaddr *)(&server->address.sin_addr));
   server->address.sin_family = server->domain;
 
-  if (connect(SocketFD, (struct sockaddr *)(&server->address), sizeof(server->address)) != 0)
+  if (connect(server->socket_fd, (struct sockaddr *)(&server->address), sizeof(server->address)) != 0)
   {
     printf("Connection was not Successful\n");
   }
@@ -28,7 +61,7 @@ void getdata(Server *server,char* ip_addr)
 
   char *msg;
   msg = "GET / HTTP/1.1\r\nHost:google.com\r\n\r\n";
-  if (send(SocketFD, msg, strlen(msg), 0) == -1)
+  if (send(server->socket_fd, msg, strlen(msg), 0) == -1)
   {
     printf("Sending failed\n");
   }
@@ -38,7 +71,7 @@ void getdata(Server *server,char* ip_addr)
   }
 
   char buffer[1024];
-  if (recv(SocketFD, buffer, sizeof(buffer), 0) == -1)
+  if (recv(server->socket_fd, buffer, sizeof(buffer), 0) == -1)
   {
     printf("Error in reciving\n");
   }
@@ -47,6 +80,29 @@ void getdata(Server *server,char* ip_addr)
     printf("Reciving Response Successful");
   }
   printf("=>HTML response recived is :: \n%s", buffer);
+}
+
+void binding(Server *server)
+{
+    while (1)
+    {
+        server->address.sin_port = htons(server->port);
+
+        server->bind_int = bind(
+            server->socket_fd,
+            (struct sockaddr *)&server->address,
+            sizeof(server->address));
+
+        if (server->bind_int == 0)
+        {
+            printf("Bound on port %d\n", server->port);
+            break;
+        }
+
+        perror("Binding failed");
+
+        server->port++;
+    }
 }
 
 Server constructor(int domain,
@@ -58,13 +114,11 @@ Server constructor(int domain,
 {
   Server server;
   server.domain = domain;
-  server.service = service;
+  server.service = service; // type
   server.protocol = protocol;
   server.interface = interface;
   server.port = port;
   server.backlog = backlog;
-  server.socket_fd = socket(domain, interface, protocol);
-
   server.address.sin_addr.s_addr = interface;
   server.address.sin_port = htons(port);
   server.address.sin_family = domain;
@@ -77,13 +131,7 @@ Server constructor(int domain,
     exit(EXIT_FAILURE);
   }
 
-  server.bind_int = bind(server.socket_fd, (struct sockaddr *)(&server.address), sizeof(server.address));
-
-  if (server.bind_int < 0)
-  {
-    perror("The binding of the socket failed\n");
-    exit(EXIT_FAILURE);
-  }
+  binding(&server);
 
   server.listen_int = listen(server.socket_fd, server.backlog);
   if (server.listen_int < 0)

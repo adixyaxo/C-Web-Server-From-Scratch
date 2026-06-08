@@ -7,7 +7,13 @@
     <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue" value="true" type="bool" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ab06050-6154-4d84-9c75-7dcc6d53429d" name="Changes" comment="" />
+    <list default="true" id="0ab06050-6154-4d84-9c75-7dcc6d53429d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/basic.html" beforeDir="false" afterPath="$PROJECT_DIR$/basic.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/running-server.c" beforeDir="false" afterPath="$PROJECT_DIR$/running-server.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server" beforeDir="false" afterPath="$PROJECT_DIR$/server" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.c" beforeDir="false" afterPath="$PROJECT_DIR$/server.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.h" beforeDir="false" afterPath="$PROJECT_DIR$/server.h" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -62,6 +68,7 @@
       <updated>1780085881011</updated>
       <workItem from="1780085885788" duration="85000" />
       <workItem from="1780329609004" duration="7000" />
+      <workItem from="1780838447606" duration="7000" />
     </task>
     <servers />
   </component>

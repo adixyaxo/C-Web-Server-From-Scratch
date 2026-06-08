@@ -5,8 +5,7 @@
 #include <netinet/in.h>
 
 char* html_return(char* filename);
-char* return_json();
-
+char* json_return(char* filename);
 typedef struct Server
 {
     int domain;
@@ -33,5 +32,7 @@ Server constructor(
     int port,
     int backlog
 );
+
+void getdata(Server *server,char* ip_addr);
 
 #endif

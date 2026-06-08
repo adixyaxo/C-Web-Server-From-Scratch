@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -122,10 +123,31 @@
         </p>
 
         <div class="footer">
-            localhost:3000
+            <form action="/api" method="get">
+                <label for="fname">First name:</label>
+                <input type="text" id="fname" name="fname"><br><br>
+                <label for="lname">Last name:</label>
+                <input type="text" id="lname" name="lname"><br><br>
+                <button type="submit" value="Submit">Submit</button>
+                <button type="reset" value="Reset">Reset</button>
+            </form>
+        </div>
+
+        <br>
+
+        <div class="footer">
+            <form action="/api" method="post">
+                <label for="fname">First name:</label>
+                <input type="text" id="fname" name="fname"><br><br>
+                <label for="lname">Last name:</label>
+                <input type="text" id="lname" name="lname"><br><br>
+                <button type="submit" value="Submit">Submit</button>
+                <button type="reset" value="Reset">Reset</button>
+            </form>
         </div>
 
     </div>
 
 </body>
+
 </html>

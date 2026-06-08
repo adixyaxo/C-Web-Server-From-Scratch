@@ -4,8 +4,63 @@
 #include <string.h>
 #include <stdlib.h>
 
+char *clip_string(char *str, char clip, int instance)
+{
+  char *copy = malloc(sizeof(str));
+  strcpy(copy, str);
+  while (instance > 0)
+  {
+    for (int i = 0; i < strlen(copy); i++)
+    {
+      if (copy[i] == clip && instance == 1)
+      {
+        copy[i] = '\0';
+        instance = instance - 1;
+      }
+      else if (copy[i] == clip && instance >= 1)
+      {
+        instance = instance = 1;
+      }
+    }
+  }
+  return copy;
+}
+
+char *name_to_json(char *fname, char *lname)
+{
+  char *json = "{"
+"\"first-name\":\"";
+strcat(json,fname);
+strcat(json,"\",\"last-name\":\"");
+strcat(json,lname);
+strcat(json,"\"}");
+return json;
+}
+
+void write_string_in_file(char* str,char* filename){
+FILE *fp = fopen(filename, "w");
+    if (fp != NULL) {
+        fprintf(fp, str);
+        fclose(fp);
+    }
+    else printf("Encountered an error while wrting in the file in the write_string_in_file function in the running-server.c\n");
+}
+
 char *handle_api_calls(char *path)
 {
+  char *fname = strstr(path, "=");
+  char str[] = {fname[1], '\0'};
+  fname = strstr(fname,str);
+  fname = clip_string(fname, '&', 1);
+  char *lname = strstr(fname, "&");
+  lname = strstr(lname, "=");
+  str[0] = lname[1];
+  lname = strstr(fname,str);
+  printf("\nFirst name :: %s\nLast Name :: %s\n", fname, lname);
+  char filename[strlen(fname)+5];
+  strcpy(filename,fname);
+  strcat(filename,".json");
+  write_string_in_file(name_to_json(fname,lname),filename);
   char *response = json_return("basic.json");
   return response;
 }
@@ -35,11 +90,12 @@ char *path_get_req(char *request, int *socket)
     char *response = html_return("basic.html");
     return response;
   }
-  else{
+  else
+  {
     char *response = html_return("basic.html");
     return response;
   }
-    free(path);
+  free(path);
 }
 
 void handle_get(int *socket, char *request)

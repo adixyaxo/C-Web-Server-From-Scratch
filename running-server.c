@@ -6,63 +6,76 @@
 
 char *clip_string(char *str, char clip, int instance)
 {
-  char *copy = malloc(sizeof(str));
-  strcpy(copy, str);
-  while (instance > 0)
-  {
-    for (int i = 0; i < strlen(copy); i++)
+    char *copy = malloc(strlen(str) + 1);
+    strcpy(copy, str);
+
+    for (int i = 0; copy[i] != '\0'; i++)
     {
-      if (copy[i] == clip && instance == 1)
-      {
-        copy[i] = '\0';
-        instance = instance - 1;
-      }
-      else if (copy[i] == clip && instance >= 1)
-      {
-        instance = instance = 1;
-      }
+        if (copy[i] == clip)
+        {
+            instance--;
+
+            if (instance == 0)
+            {
+                copy[i] = '\0';
+                break;
+            }
+        }
     }
-  }
-  return copy;
+
+    return copy;
 }
 
 char *name_to_json(char *fname, char *lname)
 {
-  char *json = "{"
-"\"first-name\":\"";
-strcat(json,fname);
-strcat(json,"\",\"last-name\":\"");
-strcat(json,lname);
-strcat(json,"\"}");
-return json;
-}
+    char *json = malloc(256);
 
+    strcpy(json, "{");
+    strcat(json, "\"first-name\":\"");
+    strcat(json, fname);
+    strcat(json, "\",\"last-name\":\"");
+    strcat(json, lname);
+    strcat(json, "\"}");
+
+    return json;
+}
 void write_string_in_file(char* str,char* filename){
 FILE *fp = fopen(filename, "w");
     if (fp != NULL) {
-        fprintf(fp, str);
+        fprintf(fp, "%s", str);
         fclose(fp);
     }
     else printf("Encountered an error while wrting in the file in the write_string_in_file function in the running-server.c\n");
 }
 
+char* generate_filename(char* fname,char* lname){
+  char* filename = malloc(256);
+  strcpy(filename,fname);
+  strcat(filename,"-");
+  strcat(filename,lname);
+  strcat(filename,".json");
+  return filename;
+}
+
 char *handle_api_calls(char *path)
 {
-  char *fname = strstr(path, "=");
-  char str[] = {fname[1], '\0'};
-  fname = strstr(fname,str);
-  fname = clip_string(fname, '&', 1);
-  char *lname = strstr(fname, "&");
-  lname = strstr(lname, "=");
-  str[0] = lname[1];
-  lname = strstr(fname,str);
-  printf("\nFirst name :: %s\nLast Name :: %s\n", fname, lname);
-  char filename[strlen(fname)+5];
-  strcpy(filename,fname);
-  strcat(filename,".json");
-  write_string_in_file(name_to_json(fname,lname),filename);
-  char *response = json_return("basic.json");
-  return response;
+    char fname[256] = {0};
+    char lname[256] = {0};
+
+    sscanf(path, "/api?fname=%255[^&]&lname=%255s", fname, lname);
+
+    printf("First name :: %s\n", fname);
+    printf("Last name  :: %s\n", lname);
+
+    char *json = name_to_json(fname, lname);
+    char *file = generate_filename(fname, lname);
+
+    write_string_in_file(json, file);
+
+    free(json);
+    free(file);
+
+    return json_return(generate_filename(fname,lname));
 }
 
 char *get_first_word(char *request)

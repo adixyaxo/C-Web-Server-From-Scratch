@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Student API</title>
+
+  <style>
+    /* =========================
+       GLOBAL
+    ========================== */
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Inter, sans-serif;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      padding: 60px;
+      overflow-x: hidden;
+    }
+
+    ::selection {
+      background: #fff;
+      color: #000;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1450px;
+      margin: auto;
+    }
+
+    /* =========================
+       HERO SECTION
+    ========================== */
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 90px;
+      align-items: stretch;
+      margin-bottom: 100px;
+    }
+
+    /* =========================
+       LEFT
+    ========================== */
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 420px;
+    }
+
+    .hero-left h1 {
+      font-size: 7rem;
+      line-height: 0.9;
+      letter-spacing: -8px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .hero-left p {
+      margin-top: 28px;
+      color: #6f6f6f;
+      max-width: 650px;
+      line-height: 2;
+      font-size: 1rem;
+    }
+
+    /* =========================
+       RIGHT
+    ========================== */
+
+    .hero-right {
+      border-left: 1px solid #141414;
+      padding-left: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 420px;
+    }
+
+    .hero-right .tag {
+      color: #5f5f5f;
+      font-size: 0.78rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+    }
+
+    .hero-right .text {
+      color: #d2d2d2;
+      font-size: 1.05rem;
+      line-height: 2.2;
+      max-width: 520px;
+    }
+
+    .hero-right .highlight {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid #151515;
+      color: #7b7b7b;
+      font-size: 0.92rem;
+      line-height: 1.9;
+    }
+
+    /* =========================
+       FORMS
+    ========================== */
+
+    .forms {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .card {
+      background: #040404;
+      border: 1px solid #141414;
+      padding: 45px;
+      transition: 0.35s ease;
+    }
+
+    .card:hover {
+      border-color: #2a2a2a;
+    }
+
+    .method {
+      color: #5f5f5f;
+      font-size: 0.72rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .card h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -2px;
+      margin-bottom: 14px;
+    }
+
+    .card p {
+      color: #6d6d6d;
+      line-height: 1.9;
+      margin-bottom: 38px;
+      max-width: 500px;
+    }
+
+    /* =========================
+       INPUTS
+    ========================== */
+
+    .form-group {
+      margin-bottom: 26px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #1d1d1d;
+      padding: 18px 0;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.3s ease;
+    }
+
+    textarea {
+      resize: none;
+      min-height: 130px;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #fff;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #4e4e4e;
+    }
+
+    /* =========================
+       BUTTON
+    ========================== */
+
+    .btn {
+      width: 100%;
+      background: #fff;
+      color: #000;
+      border: 1px solid #fff;
+      padding: 18px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 700;
+      transition: 0.35s ease;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background: #000;
+      color: #fff;
+    }
+
+    /* =========================
+       FOOTER
+    ========================== */
+
+    footer {
+      margin-top: 120px;
+      border-top: 1px solid #141414;
+      padding-top: 50px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 60px;
+    }
+
+    .footer-title {
+      color: #fff;
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      letter-spacing: -1px;
+    }
+
+    .footer-text {
+      color: #707070;
+      line-height: 2;
+      font-size: 0.95rem;
+    }
+
+    .footer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .footer-item {
+      padding-bottom: 14px;
+      border-bottom: 1px solid #111;
+    }
+
+    .footer-item span {
+      display: block;
+    }
+
+    .footer-item .label {
+      color: #5f5f5f;
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .footer-item .value {
+      color: #d4d4d4;
+      font-size: 0.92rem;
+      line-height: 1.8;
+    }
+
+    .footer-item a {
+      color: #fff;
+      text-decoration: none;
+      border-bottom: 1px solid #fff;
+      padding-bottom: 2px;
+    }
+
+    .copyright {
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 1px solid #111;
+      color: #4f4f4f;
+      font-size: 0.82rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================== */
+
+    @media(max-width:1100px) {
+
+      body {
+        padding: 30px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 50px;
+      }
+
+      .forms {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-left h1 {
+        font-size: 4.5rem;
+      }
+
+      .hero-right {
+        padding-left: 0;
+        border-left: none;
+        border-top: 1px solid #141414;
+        padding-top: 40px;
+      }
+
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+      <!-- LEFT -->
+
+      <div class="hero-left">
+
+        <div>
+
+          <h1>
+            Student<br>
+            API
+          </h1>
+
+          <p>
+            Minimal student management interface designed for
+            handling student records through low-level socket-based
+            communication. The system focuses on speed, simplicity,
+            and direct API interaction without unnecessary layers
+            or frontend frameworks.
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- RIGHT -->
+
+      <div class="hero-right">
+
+        <div>
+
+          <div class="tag">
+            Project Description
+          </div>
+
+          <div class="text">
+
+            Student API is a lightweight backend project built
+            using pure C socket programming for handling HTTP
+            requests and managing student records through REST
+            methods.
+
+            <br><br>
+
+            The frontend is developed only with HTML and CSS,
+            following a hyperminimal black-and-white aesthetic
+            focused on speed, clarity, and low overhead.
+
+          </div>
+
+        </div>
+
+        <div class="highlight">
+
+          Pure socket architecture • C backend • HTML/CSS frontend •
+          REST communication • Minimal footprint
+
+        </div>
+
+      </div>
+  </div>
+
+  </section>
+
+  <!-- FORMS -->
+
+  <section class="forms">
+
+    <!-- POST -->
+
+    <div class="card">
+
+      <div class="method">
+        POST METHOD
+      </div>
+
+      <h2>Create Student</h2>
+
+      <p>
+        Store student records directly through the socket API server.
+      </p>
+
+      <form method="post" action="poststd">
+
+        <div class="form-group">
+          <input id="name" type="text" placeholder="Student Name" name="name">
+        </div>
+
+        <div class="form-group">
+          <input type="text" placeholder="Roll Number" id="rno" name="rno">
+        </div>
+
+        <div class="form-group">
+          <input type="email" placeholder="Email Address" id="email" name="email">
+        </div>
+
+        <div class="form-group">
+          <textarea placeholder="Department / Notes" id="notes" name="notes"></textarea>
+        </div>
+
+        <button class="btn">
+          Submit
+        </button>
+
+      </form>
+
+    </div>
+
+    <!-- GET -->
+
+    <div class="card">
+
+      <div class="method">
+        GET METHOD
+      </div>
+
+      <h2>Retrieve Student</h2>
+
+      <p>
+        Fetch student information using student ID or roll number.
+      </p>
+
+      <form action="/getstd" method="get">
+
+        <div class="form-group">
+          <input type="text" placeholder="Student ID" id="stdid" name="stdid">
+        </div>
+
+        <div class="form-group">
+          <input type="text" placeholder="Roll Number" id="rno" name="rno">
+        </div>
+
+        <button class="btn">
+          Fetch Data
+        </button>
+
+      </form>
+
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+
+  <footer>
+
+    <div class="footer-grid">
+
+      <!-- COLUMN -->
+
+      <div>
+
+        <!-- COLUMN -->
+
+        <div>
+
+          <div class="footer-title">
+            About The Project
+          </div>
+
+          <div class="footer-text">
+
+            This project demonstrates HTTP communication using
+            low-level socket programming in C without external
+            frameworks. The API manually handles request parsing,
+            routing, and response generation through raw TCP
+            connections.
+
+            <br><br>
+
+            The frontend remains intentionally minimal to keep
+            the focus on backend communication and REST structure.
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- COLUMN -->
+
+      <div class="footer-list">
+
+        <div class="footer-item">
+          <span class="label">Backend</span>
+          <span class="value">
+            Pure C Socket API
+          </span>
+        </div>
+
+        <div class="footer-item">
+          <span class="label">Frontend</span>
+          <span class="value">
+            HTML / CSS
+          </span>
+        </div>
+
+        <div class="footer-item">
+          <span class="label">Communication</span>
+          <span class="value">
+            REST over HTTP
+          </span>
+        </div>
+
+      </div>
+
+      <!-- COLUMN -->
+
+      <div class="footer-list">
+
+        <div class="footer-item">
+          <span class="label">Github</span>
+          <span class="value">
+            <a href="#">
+              github.com/student-api
+            </a>
+          </span>
+        </div>
+
+        <div class="footer-item">
+          <span class="label">Methods</span>
+          <span class="value">
+            GET / POST
+          </span>
+        </div>
+
+        <div class="footer-item">
+          <span class="label">Theme</span>
+          <span class="value">
+            Hyperminimal Black UI
+          </span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="copyright">
+      STUDENT API • PURE SOCKET ARCHITECTURE • 2026
+    </div>
+
+  </footer>
+
+  </div>
+
+</body>
+
+</html>

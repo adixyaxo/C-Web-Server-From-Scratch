@@ -8,21 +8,43 @@
 
 char *html_return(char *filename)
 {
-  FILE *fp = fopen(filename, "r");
-  char *html = malloc(10000);
-  html[0] = '\0';
-  char *request = "HTTP/1.1 200 OK\r\n"
-                  "Content-Type: text/html\r\n"
-                  "\r\n";
-  strcat(html, request);
-  char buffer[256];
-  while (fgets(buffer, sizeof(buffer), fp) != NULL)
-  {
-    strcat(html, buffer);
-  }
-  fclose(fp);
-  return html;
+    FILE *fp = fopen(filename, "r");
+
+    if (fp == NULL)
+    {
+        return NULL;
+    }
+
+    fseek(fp, 0, SEEK_END);
+    long filesize = ftell(fp);
+    rewind(fp);
+
+    const char *header =
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: text/html\r\n"
+        "\r\n";
+
+    long total_size = strlen(header) + filesize + 1;
+
+    char *html = malloc(total_size);
+
+    if (html == NULL)
+    {
+        fclose(fp);
+        return NULL;
+    }
+
+    strcpy(html, header);
+
+    fread(html + strlen(header), 1, filesize, fp);
+
+    html[strlen(header) + filesize] = '\0';
+
+    fclose(fp);
+
+    return html;
 }
+
 
 char *json_return(char *filename)
 {

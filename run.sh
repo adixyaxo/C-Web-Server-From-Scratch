@@ -1,0 +1,1 @@
+gcc -O3 main.c src/server.c src/server-handling.c -o main && ./main

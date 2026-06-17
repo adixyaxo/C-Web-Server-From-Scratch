@@ -1,7 +1,8 @@
 
 #include "server-handling.h"
 #include "parsing.h"
-static char indexjsonfile[256] = "../database/index.json";
+static char indexjsonfile[256] = "./database/index.json";
+static char indexhtmlfile[256] = "./templates/index.html";
 char *handle_api_calls(char *path)
 {
     char stdid[256] = {0};
@@ -26,18 +27,18 @@ char *path_get_req(char *request, int *socket)
     printf("\nPATH::%s\n", path);
 
     char *response = NULL;
-
     if (strncmp(path, "/getstd", 7) == 0)
     {
         response = handle_api_calls(path);
     }
     else if (strcmp(path, "/") == 0)
     {
-        response = html_return(indexjsonfile);
+        response = html_return(indexhtmlfile);
     }
     else
     {
-        response = html_return(indexjsonfile);
+        printf("\nThere might be an error in the path_get_req path handling get the returned path\n");
+        response = html_return(indexhtmlfile);
     }
 
     free(path);
@@ -74,7 +75,7 @@ void handle_post(int *socket, char *request)
     }
 
     char *response = json_return("../database/index.json");
-
+    printf("%s",response);
     if (response != NULL)
     {
         int w = write(*socket, response, strlen(response));

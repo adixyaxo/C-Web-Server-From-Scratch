@@ -12,6 +12,7 @@ char *html_return(char *filename)
 
   if (fp == NULL)
   {
+    printf("\nFile Not Found\n");
     return NULL;
   }
 

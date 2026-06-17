@@ -1,1 +1,1 @@
-gcc -O3 main.c src/server.c src/server-handling.c src/parsing.c -o main
+gcc -O3 main.c src/server.c src/server-handling.c src/parsing.c -o main && ./main

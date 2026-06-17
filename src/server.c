@@ -8,43 +8,47 @@
 
 char *html_return(char *filename)
 {
-    FILE *fp = fopen(filename, "r");
+  FILE *fp = fopen(filename, "r");
 
-    if (fp == NULL)
-    {
-        return NULL;
-    }
+  if (fp == NULL)
+  {
+    return NULL;
+  }
 
-    fseek(fp, 0, SEEK_END);
-    long filesize = ftell(fp);
-    rewind(fp);
+  fseek(fp, 0, SEEK_END);
+  long filesize = ftell(fp);
+  rewind(fp);
 
-    const char *header =
-        "HTTP/1.1 200 OK\r\n"
-        "Content-Type: text/html\r\n"
-        "\r\n";
+  const char *header =
+      "HTTP/1.1 200 OK\r\n"
+      "Content-Type: text/html\r\n"
+      "\r\n";
 
-    long total_size = strlen(header) + filesize + 1;
+  long total_size = strlen(header) + filesize + 1;
 
-    char *html = malloc(total_size);
+  char *html = malloc(total_size);
 
-    if (html == NULL)
-    {
-        fclose(fp);
-        return NULL;
-    }
-
-    strcpy(html, header);
-
-    fread(html + strlen(header), 1, filesize, fp);
-
-    html[strlen(header) + filesize] = '\0';
-
+  if (html == NULL)
+  {
     fclose(fp);
+    return NULL;
+  }
 
-    return html;
+  strcpy(html, header);
+
+  int ret = fread(html + strlen(header), 1, filesize, fp);
+  if (ret != filesize)
+  {
+    fprintf(stderr, "fread() failed\n");
+    exit(EXIT_FAILURE);
+  }
+
+  html[strlen(header) + filesize] = '\0';
+
+  fclose(fp);
+
+  return html;
 }
-
 
 char *json_return(char *filename)
 {
@@ -66,7 +70,6 @@ char *json_return(char *filename)
 
 void getdata(Server *server, char *ip_addr)
 {
-
 
   char *ip = ip_addr;
   server->address.sin_port = htons(server->port);
@@ -106,25 +109,25 @@ void getdata(Server *server, char *ip_addr)
 
 void binding(Server *server)
 {
-    while (1)
+  while (1)
+  {
+    server->address.sin_port = htons(server->port);
+
+    server->bind_int = bind(
+        server->socket_fd,
+        (struct sockaddr *)&server->address,
+        sizeof(server->address));
+
+    if (server->bind_int == 0)
     {
-        server->address.sin_port = htons(server->port);
-
-        server->bind_int = bind(
-            server->socket_fd,
-            (struct sockaddr *)&server->address,
-            sizeof(server->address));
-
-        if (server->bind_int == 0)
-        {
-            printf("Bound on port %d\n", server->port);
-            break;
-        }
-
-        perror("Binding failed");
-
-        server->port++;
+      printf("Bound on port %d\n", server->port);
+      break;
     }
+
+    perror("Binding failed");
+
+    server->port++;
+  }
 }
 
 Server constructor(int domain,

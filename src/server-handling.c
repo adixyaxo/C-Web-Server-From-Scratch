@@ -1,5 +1,6 @@
 
 #include "server-handling.h"
+#include "parsing.h"
 static char indexjsonfile[256] = "../database/index.json";
 char *handle_api_calls(char *path)
 {
@@ -50,12 +51,17 @@ void handle_get(int *socket, char *request)
 
     if (response != NULL)
     {
-        write(*socket, response, strlen(response));
+
+        int w = write(*socket, response, strlen(response));
+        if (w==-1)
+        {
+            printf("\nError in writing the socket in handle_get function in server-handing.c\n");
+            exit(EXIT_FAILURE);
+        }
+
         free(response);
     }
 }
-
-
 
 void handle_post(int *socket, char *request)
 {
@@ -71,11 +77,15 @@ void handle_post(int *socket, char *request)
 
     if (response != NULL)
     {
-        write(*socket, response, strlen(response));
+        int w = write(*socket, response, strlen(response));
+        if (w==-1)
+        {
+            printf("\nError in writing the socket in handle_get function in server-handing.c\n");
+            exit(EXIT_FAILURE);
+        }
         free(response);
     }
 }
-
 
 void launch(Server *server, char *filename)
 {

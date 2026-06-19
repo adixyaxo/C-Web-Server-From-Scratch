@@ -3,19 +3,28 @@
 #include "parsing.h"
 static char indexjsonfile[256] = "./database/index.json";
 static char indexhtmlfile[256] = "./templates/index.html";
-char *handle_api_calls(char *path)
+static char *studentDatabase = "./database/";
+char *handle_api_calls(char *path,STUDENT* std)
 {
+    printf("Handling API call for path: %s\n", path);
     char stdid[256] = {0};
     char rno[256] = {0};
 
     sscanf(path, "/getstd?stdid=%255[^&]&rno=%255s", stdid, rno);
-
-    char* filename = generate_filename(stdid,rno);
+    printf("Extracted stdid: %s\n", stdid);
+    printf("Extracted rno: %s\n", rno);
+    char* filename = malloc(256);
+    strcpy(filename,studentDatabase);
+    strcat(filename,generate_filename(stdid,rno));
+    json_to_string(filename,std);
+    free(filename);
+    return student_detail_page(std);
     // implement the file reading and display process
 }
 
-char *path_get_req(char *request, int *socket)
+char *path_get_req(char *request, int *socket,STUDENT *std)
 {
+    printf("Processing GET request for path...\n");
     char *path = get_first_word(request);
 
     if (path == NULL)
@@ -29,7 +38,8 @@ char *path_get_req(char *request, int *socket)
     char *response = NULL;
     if (strncmp(path, "/getstd", 7) == 0)
     {
-        response = handle_api_calls(path);
+        printf("Handling API call for path: %s\n", path);
+        response = handle_api_calls(path,std);
     }
     else if (strcmp(path, "/") == 0)
     {
@@ -46,9 +56,10 @@ char *path_get_req(char *request, int *socket)
     return response;
 }
 
-void handle_get(int *socket, char *request)
+void handle_get(int *socket, char *request, STUDENT* std)
 {
-    char *response = path_get_req(request, socket);
+    printf("Handling GET request...\n");
+    char *response = path_get_req(request, socket, std);
 
     if (response != NULL)
     {
@@ -88,8 +99,9 @@ void handle_post(int *socket, char *request)
     }
 }
 
-void launch(Server *server, char *filename)
+void launch(Server *server, char *filename,STUDENT* std)
 {
+    printf("Launching server on port %d...\n", server->port);
     char *request = malloc(30000);
 
     if (request == NULL)
@@ -139,7 +151,7 @@ void launch(Server *server, char *filename)
         }
         else if (strcmp(method, "GET") == 0)
         {
-            handle_get(&new_socket, request);
+            handle_get(&new_socket, request,std);
         }
 
         printf("\nFULL REQUEST:\n%s\n", request);

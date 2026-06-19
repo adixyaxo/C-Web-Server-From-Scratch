@@ -87,7 +87,8 @@ char *generate_filename(char *stdid, char *rno)
 
     if (filename == NULL)
         return NULL;
-
+    printf("stdid::%s\n", stdid);
+    printf("rno::%s\n", rno);
     strcpy(filename, stdid);
     strcat(filename, "-");
     strcat(filename, rno);
@@ -98,110 +99,131 @@ char *generate_filename(char *stdid, char *rno)
 
 char *student_detail_page(STUDENT *std)
 {
-    char *html = {
-        "<!DOCTYPE html>\n",
-        "<html lang=\"en\">\n",
-        "<head>\n",
-        "<meta charset=\"UTF-8\">\n",
-        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n",
-        "<title>Student Details</title>\n",
-        "\n",
-        "<style>\n",
-        "*{\n",
-        "    margin:0;\n",
-        "    padding:0;\n",
-        "    box-sizing:border-box;\n",
-        "    font-family:Inter,sans-serif;\n",
-        "}\n",
-        "\n",
-        "body{\n",
-        "    background:#000;\n",
-        "    color:#fff;\n",
-        "    min-height:100vh;\n",
-        "    display:flex;\n",
-        "    justify-content:center;\n",
-        "    align-items:center;\n",
-        "    padding:30px;\n",
-        "}\n",
-        "\n",
-        ".card{\n",
-        "    width:100%;\n",
-        "    max-width:700px;\n",
-        "    border:1px solid #161616;\n",
-        "    background:#050505;\n",
-        "    padding:50px;\n",
-        "}\n",
-        "\n",
-        ".label{\n",
-        "    color:#666;\n",
-        "    text-transform:uppercase;\n",
-        "    letter-spacing:2px;\n",
-        "    font-size:.75rem;\n",
-        "    margin-bottom:12px;\n",
-        "}\n",
-        "\n",
-        "h1{\n",
-        "    font-size:3rem;\n",
-        "    margin-bottom:40px;\n",
-        "    letter-spacing:-2px;\n",
-        "}\n",
-        "\n",
-        ".row{\n",
-        "    padding:18px 0;\n",
-        "    border-bottom:1px solid #111;\n",
-        "}\n",
-        "\n",
-        ".key{\n",
-        "    color:#666;\n",
-        "    font-size:.85rem;\n",
-        "    margin-bottom:8px;\n",
-        "    text-transform:uppercase;\n",
-        "}\n",
-        "\n",
-        ".value{\n",
-        "    color:#fff;\n",
-        "    font-size:1.05rem;\n",
-        "}\n",
-        "\n",
-        "</style>\n",
-        "</head>\n",
-        "<body>\n",
-        "\n",
-        "<div class=\"card\">\n",
-        "\n",
-        "    <div class=\"label\">Student Record</div>\n",
-        "    <h1>Student Details</h1>\n",
-        "\n",
-        "    <div class=\"row\">\n",
-        "        <div class=\"key\">Student ID</div>\n",
-        "        <div class=\"value\">Student id</div>\n",
-        "    </div>\n",
-        "\n",
-        "    <div class=\"row\">\n",
-        "        <div class=\"key\">Name</div>\n",
-        "        <div class=\"value\">%s</div>\n",
-        "    </div>\n",
-        "\n",
-        "    <div class=\"row\">\n",
-        "        <div class=\"key\">Roll Number</div>\n",
-        "        <div class=\"value\">%s</div>\n",
-        "    </div>\n",
-        "\n",
-        "    <div class=\"row\">\n",
-        "        <div class=\"key\">Email</div>\n",
-        "        <div class=\"value\">%s</div>\n",
-        "    </div>\n",
-        "\n",
-        "    <div class=\"row\">\n",
-        "        <div class=\"key\">Notes</div>\n",
-        "        <div class=\"value\">%s</div>\n",
-        "    </div>\n",
-        "\n",
-        "</div>\n",
-        "\n",
-        "</body>\n",
-        "</html>\n"};
-        char *response = malloc(10000);
-        sprintf(response,html,std->name,std->email,std->roll_no,std->notes);
-        return response;
+    const char *html = {"HTTP/1.1 200 OK\r\n"
+                        "Content-Type: text/html\r\n"
+                        "\r\n"
+                        "<!DOCTYPE html>\n"
+                        "<html lang=\"en\">\n"
+                        "<head>\n"
+                        "<meta charset=\"UTF-8\">\n"
+                        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
+                        "<title>Student Details</title>\n"
+                        "\n"
+                        "<style>\n"
+                        "*{\n"
+                        "    margin:0;\n"
+                        "    padding:0;\n"
+                        "    box-sizing:border-box;\n"
+                        "    font-family:Inter,sans-serif;\n"
+                        "}\n"
+                        "\n"
+                        "body{\n"
+                        "    background:#000;\n"
+                        "    color:#fff;\n"
+                        "    min-height:100vh;\n"
+                        "    display:flex;\n"
+                        "    justify-content:center;\n"
+                        "    align-items:center;\n"
+                        "    padding:30px;\n"
+                        "}\n"
+                        "\n"
+                        ".card{\n"
+                        "    width:100%;\n"
+                        "    max-width:700px;\n"
+                        "    border:1px solid #161616;\n"
+                        "    background:#050505;\n"
+                        "    padding:50px;\n"
+                        "}\n"
+                        "\n"
+                        ".label{\n"
+                        "    color:#666;\n"
+                        "    text-transform:uppercase;\n"
+                        "    letter-spacing:2px;\n"
+                        "    font-size:.75rem;\n"
+                        "    margin-bottom:12px;\n"
+                        "}\n"
+                        "\n"
+                        "h1{\n"
+                        "    font-size:3rem;\n"
+                        "    margin-bottom:40px;\n"
+                        "    letter-spacing:-2px;\n"
+                        "}\n"
+                        "\n"
+                        ".row{\n"
+                        "    padding:18px 0;\n"
+                        "    border-bottom:1px solid #111;\n"
+                        "}\n"
+                        "\n"
+                        ".key{\n"
+                        "    color:#666;\n"
+                        "    font-size:.85rem;\n"
+                        "    margin-bottom:8px;\n"
+                        "    text-transform:uppercase;\n"
+                        "}\n"
+                        "\n"
+                        ".value{\n"
+                        "    color:#fff;\n"
+                        "    font-size:1.05rem;\n"
+                        "}\n"
+                        "\n"
+                        "</style>\n"
+                        "</head>\n"
+                        "<body>\n"
+                        "\n"
+                        "<div class=\"card\">\n"
+                        "\n"
+                        "    <div class=\"label\">Student Record</div>\n"
+                        "    <h1>Student Details</h1>\n"
+                        "\n"
+                        "    <div class=\"row\">\n"
+                        "        <div class=\"key\">Student ID</div>\n"
+                        "        <div class=\"value\">Student id</div>\n"
+                        "    </div>\n"
+                        "\n"
+                        "    <div class=\"row\">\n"
+                        "        <div class=\"key\">Name</div>\n"
+                        "        <div class=\"value\">%s</div>\n"
+                        "    </div>\n"
+                        "\n"
+                        "    <div class=\"row\">\n"
+                        "        <div class=\"key\">Roll Number</div>\n"
+                        "        <div class=\"value\">%s</div>\n"
+                        "    </div>\n"
+                        "\n"
+                        "    <div class=\"row\">\n"
+                        "        <div class=\"key\">Email</div>\n"
+                        "        <div class=\"value\">%s</div>\n"
+                        "    </div>\n"
+                        "\n"
+                        "    <div class=\"row\">\n"
+                        "        <div class=\"key\">Notes</div>\n"
+                        "        <div class=\"value\">%s</div>\n"
+                        "    </div>\n"
+                        "\n"
+                        "</div>\n"
+                        "\n"
+                        "</body>\n"
+                        "</html>\n"};
+    char *response = malloc(10000);
+    sprintf(response, html, std->name, std->email, std->roll_no, std->notes);
+    return response;
+}
+
+void json_to_string(char *filename, STUDENT *std)
+{
+    printf("Reading student details from file: %s\n", filename);
+
+    FILE *fp = fopen(filename, "r");
+
+    char buffer[10000];
+    if (fp != NULL)
+    {
+        char* result = fgets(buffer, sizeof(buffer), fp);
+        sscanf(buffer, "\\{\"name\":\"%256s\",\"roll_no\":\"%256s\",\"email\":\"%256s\",\"notes\":\"%1024s\"\\}",std->name, std->roll_no, std->email, std->notes);
+        fclose(fp);
+    }
+    else
+    {
+        printf("Error reading file: %s\n", filename);
+    }
 }

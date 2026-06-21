@@ -10,4 +10,5 @@ void write_string_in_file(char *str, char *filename);
 char *generate_filename(char *stdid, char *rno);
 char *student_detail_page(STUDENT *std);
 void json_to_string(char *filename,STUDENT *std);
+void PrintStudentInfo(STUDENT* std);
 #endif

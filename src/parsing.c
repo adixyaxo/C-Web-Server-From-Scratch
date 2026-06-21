@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "students.h"
+#include "parsing.h"
+
 char *get_first_word(char *request)
 {
     char *bigpath = strstr(request, "/");
@@ -99,6 +101,7 @@ char *generate_filename(char *stdid, char *rno)
 
 char *student_detail_page(STUDENT *std)
 {
+    PrintStudentInfo(std);
     const char *html = {"HTTP/1.1 200 OK\r\n"
                         "Content-Type: text/html\r\n"
                         "\r\n"
@@ -176,11 +179,6 @@ char *student_detail_page(STUDENT *std)
                         "    <h1>Student Details</h1>\n"
                         "\n"
                         "    <div class=\"row\">\n"
-                        "        <div class=\"key\">Student ID</div>\n"
-                        "        <div class=\"value\">Student id</div>\n"
-                        "    </div>\n"
-                        "\n"
-                        "    <div class=\"row\">\n"
                         "        <div class=\"key\">Name</div>\n"
                         "        <div class=\"value\">%s</div>\n"
                         "    </div>\n"
@@ -205,7 +203,7 @@ char *student_detail_page(STUDENT *std)
                         "</body>\n"
                         "</html>\n"};
     char *response = malloc(10000);
-    sprintf(response, html, std->name, std->email, std->roll_no, std->notes);
+    sprintf(response, html, std->name, std->roll_no, std->email, std->notes);
     return response;
 }
 
@@ -214,16 +212,36 @@ void json_to_string(char *filename, STUDENT *std)
     printf("Reading student details from file: %s\n", filename);
 
     FILE *fp = fopen(filename, "r");
-
+    if (fp == NULL)
+    {
+        perror("fopen");
+        return;
+    }
     char buffer[10000];
-    if (fp != NULL)
+    char *result = fgets(buffer, sizeof(buffer), fp);
+    printf("BUFFER:\n[%s]\n", buffer);
+
+    if (result != NULL)
     {
-        char* result = fgets(buffer, sizeof(buffer), fp);
-        sscanf(buffer, "\\{\"name\":\"%256s\",\"roll_no\":\"%256s\",\"email\":\"%256s\",\"notes\":\"%1024s\"\\}",std->name, std->roll_no, std->email, std->notes);
-        fclose(fp);
+        int ret = sscanf(buffer,
+                         "{\"name\":\"%255[^\"]\",\"roll_no\":\"%255[^\"]\",\"email\":\"%255[^\"]\",\"notes\":\"%1023[^\"]\"}",
+                         std->name,
+                         std->roll_no,
+                         std->email,
+                         std->notes);
+
+        if (ret != 4)
+        {
+            printf("Error parsing file\n");
+        }
     }
-    else
-    {
-        printf("Error reading file: %s\n", filename);
-    }
+
+    fclose(fp);
+}
+
+/* FOR DEBUGGING */
+
+void PrintStudentInfo(STUDENT *std)
+{
+    printf("Student Name :: %s\nStudent email :: %s\nRoll-no :: %s\nNotes :: %s\n", std->name, std->email, std->roll_no, std->notes);
 }

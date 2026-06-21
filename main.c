@@ -4,6 +4,7 @@
 #include "src/server-handling.h"
 #include "src/students.h"
 #include <stdlib.h>
+
 int main()
 {
   printf("Starting server...\n");
@@ -12,6 +13,7 @@ int main()
   Server server;
   STUDENT* std;
   std = malloc(sizeof(STUDENT));
+  student_allocate_mem(std);
   // student_allocate_mem(std);
 
   server = constructor(

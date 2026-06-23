@@ -11,8 +11,8 @@ void student_allocate_mem(STUDENT *std){
 }
 
 void student_constructor(STUDENT *std,char* name,char* roll_no,char* email,char* notes){
-std->name = name;
-std->email = email;
-std->notes = notes;
-std->roll_no = roll_no;
+std->name = strdup(name);
+std->email = strdup(email);
+std->notes = strdup(notes);
+std->roll_no = strdup(roll_no);
 }

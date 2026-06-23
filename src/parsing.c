@@ -4,6 +4,14 @@
 #include "students.h"
 #include "parsing.h"
 
+void replace_char(char *str, char old_char, char new_char) {
+    char *ptr = str;
+    while ((ptr = strchr(ptr, old_char)) != NULL){
+        *ptr = new_char;  // Dereference pointer to replace the character
+        ptr++;            // Move to next position to avoid re-checking the same index
+    }
+}
+
 char *get_first_word(char *request)
 {
     char *bigpath = strstr(request, "/");
@@ -51,7 +59,7 @@ char *clip_string(char *str, char clip, int instance)
     return copy;
 }
 
-char *name_to_json(char *stdid, char *rno)
+char *to_json(char *name, char *rno,char *email,char* notes)
 {
     char *json = malloc(256);
 
@@ -59,10 +67,14 @@ char *name_to_json(char *stdid, char *rno)
         return NULL;
 
     strcpy(json, "{");
-    strcat(json, "\"first-name\":\"");
-    strcat(json, stdid);
-    strcat(json, "\",\"last-name\":\"");
+    strcat(json, "\"name\":\"");
+    strcat(json, name);
+    strcat(json, "\",\"roll_no\":\"");
     strcat(json, rno);
+    strcat(json, "\",\"email\":\"");
+    strcat(json, email);
+    strcat(json, "\",\"notes\":\"");
+    strcat(json, notes);
     strcat(json, "\"}");
 
     return json;
@@ -83,18 +95,17 @@ void write_string_in_file(char *str, char *filename)
     }
 }
 
-char *generate_filename(char *stdid, char *rno)
+char *generate_filename(char *name, char *rno)
 {
     char *filename = malloc(256);
 
     if (filename == NULL)
         return NULL;
-    printf("stdid::%s\n", stdid);
-    printf("rno::%s\n", rno);
-    strcpy(filename, stdid);
-    strcat(filename, "-");
-    strcat(filename, rno);
-    strcat(filename, ".json");
+        strcpy(filename, name);
+        strcat(filename, "-");
+        strcat(filename, rno);
+        strcat(filename, ".json");
+        printf("Filename::%s\n",filename);
 
     return filename;
 }
@@ -237,6 +248,25 @@ void json_to_string(char *filename, STUDENT *std)
     }
 
     fclose(fp);
+}
+
+void StudentInfoRegistration(char* body){
+char name[256];
+char rno[256];
+char email[256];
+char notes[1024];
+sscanf(body,"name=%255[^&]&rno=%255[^&]&email=%255[^&]&notes=%1023[^&]",name,rno,email,notes);
+replace_char(name,'+',' ');
+replace_char(notes,'+',' ');
+char* filename = malloc(256);
+strcat(filename,"./database/");
+strcat(filename,generate_filename(name,rno));
+printf("\n\nFILENAME :: %s\n\n",filename);
+char* json = to_json(name,rno,email,notes);
+printf("JSON :: %s",json);
+write_string_in_file(json,filename);
+free(filename);
+free(json);
 }
 
 /* FOR DEBUGGING */
